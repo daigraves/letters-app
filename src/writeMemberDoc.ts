@@ -2,11 +2,11 @@
 import { 
   doc,
   setDoc,
-  serverTimestamp
+  serverTimestamp 
 } from "firebase/firestore";
 import { db } from "./firebase";
 
-// Adjust this interface if your user object has more fields
+// If your User object has more fields, add them here:
 interface User {
   uid: string;
   displayName?: string;
@@ -16,16 +16,18 @@ export async function writeMemberDoc(
   groupCode: string,
   user: User
 ) {
+  // Reference to groups/{groupCode}
   const groupRef = doc(db, "groups", groupCode);
 
+  // Create the group document
   await setDoc(groupRef, {
-    // Track who “owns” this group
+    // Who owns this group
     ownerId:   user.uid,
-    // Seed the creator into members
-    members:   [ user.uid ],
-    // Timestamps and metadata
+    // Start with the creator as the sole member
+    members:   [user.uid],
+    // Timestamps & metadata
     createdAt: serverTimestamp(),
     createdBy: user.uid,
-    // …any other fields you need…
+    // …you can add more fields here if needed…
   });
 }
